@@ -3,7 +3,7 @@
 
 #include <pb.h>
 #include <pb_decode.h>
-
+#include <cobs.h>
 #include "simple.pb.h"
 
 #include "common.h"
@@ -26,7 +26,7 @@ int main() {
 
     printf("Encoded message from file size: %zu bytes\n", file_size);
 
-    unsigned char *buffer = (unsigned char *)malloc(file_size + HEADROOM_BYTES); // Allocate memory for the buffer
+    unsigned char *buffer = (unsigned char *)malloc(file_size); // Allocate memory for the buffer
     if (buffer == NULL) {
         printf("Error allocating memory\n");
         fclose(file);
@@ -43,11 +43,26 @@ int main() {
     }
     printf("\n");
 
-    // Create a SimpleMessage message
+    /* Decode COBS */
+    cobs_decode_result decode_result = cobs_decode(buffer, sizeof(buffer), buffer, file_size - 1);
+    if (decode_result.status != COBS_ENCODE_OK)   {
+        printf("COBS Error %d", decode_result.status);
+        ret = 1;
+        goto exit;
+    }
+
+    /* Print the buffer to the console */
+    printf("COBS decoded message size: %zu bytes\n", decode_result.out_len);
+    for (int i = 0; i < decode_result.out_len; i++) {
+        printf("%02x ", buffer[i]);
+    }
+    printf("\n");
+
+    /* Create a SimpleMessage message */
     simple_message_t message = SIMPLE_MESSAGE_INIT_DEFAULT;
 
     /* Create a stream that will write to our buffer. Note: don't pass the buffer size, but the file size */
-    pb_istream_t stream = pb_istream_from_buffer(buffer, file_size);
+    pb_istream_t stream = pb_istream_from_buffer(buffer, decode_result.out_len);
 
     uint8_t status = pb_decode(&stream, SIMPLE_MESSAGE_FIELDS, &message);
     if (!status)

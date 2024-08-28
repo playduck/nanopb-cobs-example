@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(nanopb-cobs-example)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/nanopb)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cobs-c)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/generated)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/generated/src)
 
@@ -17,6 +18,8 @@ set(common_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/nanopb/pb_decode.c
     ${CMAKE_CURRENT_SOURCE_DIR}/nanopb/pb_encode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/nanopb/pb_decode.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cobs-c/cobs.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cobs-c/cobs.c
 )
 
 # Set the executable source files
@@ -44,7 +47,6 @@ add_custom_target(generate_protobufs
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generated/src/simple.pb.h
             ${CMAKE_CURRENT_SOURCE_DIR}/generated/src/simple.pb.c
 )
-
 
 # Create the executables
 add_executable(${PROJECT_NAME}_encode ${executable1_sources})

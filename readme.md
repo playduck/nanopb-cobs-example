@@ -24,12 +24,16 @@ Now find two executables in the build directory:
 Example output:
 ```
 --- Encoder ---
-Chose lucky number 4
-Encoded message size: 2 bytes
-08 04
+Chose lucky number 28
+Protobuf encoded message size: 2 bytes
+08 1c
+COBS encoded message size: 4 bytes
+03 08 1c 00
 Writing to file message.bin
 --- Decoder ---
-Encoded message from file size: 2 bytes
-08 04
-Your lucky number was 4!
+Encoded message from file size: 4 bytes
+03 08 1c 00
+COBS decoded message size: 2 bytes
+08 1c
+Your lucky number was 28!
 ```
