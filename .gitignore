@@ -1,0 +1,6 @@
+venv/
+build/
+generated/
+.vscode/
+.DS_Store
+*.bin
